@@ -1,0 +1,17 @@
+{
+  "name": "did-client-pay",
+  "version": "1.0.0",
+  "description": "This package makes simple to call our webiste api with just one function.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "author": "Manas",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "typescript": "^5.7.3"
+  }
+}

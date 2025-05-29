@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { Viewport } from "next";
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.BASE_URL as string),
-  title: "Sign in - Client-Did-Pay",
+  title: "My Pookie | Dashboard",
   description:
     "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
   keywords: ["valentine", "saas", "anime-based", "pookie"],
@@ -19,12 +21,17 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Sign in - My Pookie",
+    title: "My Pookie | Dashboard",
     description:
       "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
     creator: "@scienmanas",
     site: process.env.SITE_NAME as string,
+
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "pink",
 };
 
 export default function Dashboard({

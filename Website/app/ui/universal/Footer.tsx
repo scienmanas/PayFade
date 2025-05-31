@@ -1,7 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import logoImg from "@/public/assets/logo/logo.png";
 
-//TODO: Insert a google form lnik in the 
+//TODO: Insert a google form lnik in the
 
 interface Author {
   name: string;
@@ -27,7 +28,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
           {/* Brand/Logo Section */}
           <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-bold">PayFade</h3>
+            <Image alt="logo" src={logoImg} height={30} />
             <p className="text-gray-300 text-sm leading-relaxed">
               Crafted with passion and precision by two dedicated developers.
             </p>

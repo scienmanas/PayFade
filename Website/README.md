@@ -7,3 +7,4 @@ In Footer Framer motion is left to add donation stuff
 - Look into the Auth and fix it 
 - Look into the Dashboard and fix it
 - Meta data change of every page
+- How to make smooth fluid flow in this like there are in other startup website

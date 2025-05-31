@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="antialiased w-full h-fit bg-slate-300"
+        className="antialiased w-full h-fit bg-slate-200"
       >
         {children}
       </body>

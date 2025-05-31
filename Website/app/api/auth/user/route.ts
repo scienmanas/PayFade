@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { oAuthGoogleClient } from "@/app/config/oAuth";
+import { oAuthGoogleClient } from "@/app/config/OAuth";
 import { db } from "@/db/index";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";

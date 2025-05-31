@@ -1,4 +1,4 @@
-import { oAuthGoogleClient } from "@/app/config/oAuth";
+import { oAuthGoogleClient } from "@/app/config/OAuth";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
+  // If no Auth code, return error
   if (!code)
     return NextResponse.json(
       { error: "Authorization code not found" },

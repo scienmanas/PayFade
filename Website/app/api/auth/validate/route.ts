@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { oAuthGoogleClient } from "@/app/config/oAuth";
+import { oAuthGoogleClient } from "@/app/config/OAuth";
 
+// Post route
 export async function POST(req: NextRequest) {
   const cookieStore = cookies();
   const sessionToken = (await cookieStore).get("session-token")?.value;

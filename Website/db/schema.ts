@@ -8,5 +8,5 @@ export const users = pgTable("users", {
     .default(sql`gen_random_uuid()`), // or use `uuid_generate_v4()` if using that extension
   name: varchar("name", { length: 255 }),
   email: text("email").notNull(),
-    createdAt: timestamp("created_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
 });

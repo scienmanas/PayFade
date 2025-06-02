@@ -1,4 +1,5 @@
 import { Navbar } from "@/app/ui/landing/Navbar";
+import { Footer } from "@/app/ui/universal/Footer";
 
 // Layout component that wraps the blog page contents
 export default function Layout({
@@ -10,6 +11,7 @@ export default function Layout({
       <main className="w-full h-fit flex flex-col items-center justify-center p-4 mt-14">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }

@@ -2,28 +2,48 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.BASE_URL as string),
-  title: "Sign in - Client-Did-Pay",
+  title: `Signin - ${process.env.SITE_NAME}`,
   description:
-    "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
-  keywords: ["valentine", "saas", "anime-based", "pookie"],
-  authors: { name: "Manas", url: "https://scienmanas.xyz" },
+    "Sign in to FayPade  an Open Source platform to help you change the website opacity if the client does't pay for your service.",
+  keywords: [
+    "signin",
+    "login",
+    "PayFade",
+    "website opacity tool",
+    "adjust opacity",
+    "client payment",
+    "client did not pay",
+    "open source tool",
+  ],
+  authors: [
+    {
+      name: "Manas",
+      url: "https://scienmanas.xyz",
+    },
+    {
+      name: "Nikhil Srivastava",
+      url: "https://nikhilsrv.page",
+    },
+  ],
   robots: "index, follow",
   openGraph: {
-    title: "My Pookie | Dashboard",
+    title: `Signin - ${process.env.SITE_NAME}`,
     description:
-      "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
+      "Sign in to FayPade  an Open Source platform to help you change the website opacity if the client does't pay for your service.",
     url: process.env.BASE_URL,
-    type: "profile",
+
+    type: "article",
+    siteName: `${process.env.SITE_NAME}`,
     locale: "en_US",
-    siteName: process.env.SITE_NAME as string,
+    authors: ["Manas", "Nikhil Srivastava"],
   },
   twitter: {
     card: "summary",
-    title: "Sign in - My Pookie",
+    title: `Signin - ${process.env.SITE_NAME}`,
     description:
-      "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
+      "Sign in to FayPade  an Open Source platform to help you change the website opacity if the client does't pay for your service.",
     creator: "@scienmanas",
-    site: process.env.SITE_NAME as string,
+    site: process.env.SITE_ENV,
   },
 };
 

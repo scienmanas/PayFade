@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Markdown from "markdown-to-jsx";
 import { markdownParser } from "@/app/utils/markdown-parser";
-import { firaSansFont } from "@/app/utils/fonts";
+import { firaSansFont } from "@/app/lib/fonts";
 
 type PageProps = {
   params: Promise<{ slug: string }>;

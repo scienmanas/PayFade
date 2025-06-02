@@ -1,8 +1,17 @@
-import { oAuthGoogleClient } from "@/app/config/OAuth";
+import { OAuthGoogleClient } from "@/app/config/OAuth";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import { OAuthData } from "@/app/lib/definitions";
 
 export async function GET(req: NextRequest) {
+  // Clear any existing auth-token cookie
+  const cookieStore = cookies();
+  const authToken = (await cookieStore).get("auth-token")?.value;
+  if (authToken) {
+    (await cookieStore).delete("auth-token");
+  }
+
   // Get url and then code from it
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
@@ -16,14 +25,25 @@ export async function GET(req: NextRequest) {
 
   try {
     // Exchange the code for tokens
-    const { tokens } = await oAuthGoogleClient.getToken(code);
+    const { tokens } = await OAuthGoogleClient.getToken(code);
     const idToken = tokens.id_token;
 
     if (!idToken)
       return NextResponse.json({ error: "ID Token missing" }, { status: 400 });
 
+    // Build Payload
+    const payload: OAuthData = {
+      provider: "google",
+      token: idToken,
+    };
+    // Sign the JWT token
+    const signedJWT = jwt.sign(payload, process.env.JWT_SECRET as string, {
+      algorithm: "HS256",
+      expiresIn: "1h", // Token expiration time
+    });
+
     // Store cookies
-    (await cookies()).set("session-token", idToken, {
+    (await cookies()).set("auth-token", signedJWT, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
       domain:

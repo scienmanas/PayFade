@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Navbar } from "@/app/ui/landing/Navbar";
+import { Footer } from "@/app/ui/universal/Footer";
 import { Hero } from "@/app/ui/landing/Hero";
 import { Features } from "@/app/ui/landing/Features";
 
@@ -13,6 +13,7 @@ export default function Home() {
           <Features />
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

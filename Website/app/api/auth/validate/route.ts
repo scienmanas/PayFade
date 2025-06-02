@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { oAuthGoogleClient } from "@/app/config/OAuth";
+import { OAuthGoogleClient } from "@/app/config/OAuth";
 
 // Post route
 export async function POST(req: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     // 1. Verify the token
     let ticket;
     try {
-      ticket = await oAuthGoogleClient.verifyIdToken({
+      ticket = await OAuthGoogleClient.verifyIdToken({
         idToken: sessionToken,
         audience: process.env.GOOGLE_CLIENT_ID,
       });

@@ -30,4 +30,5 @@ export const website = pgTable("website,", {
   api_key: varchar("api_key", { length: 255 }).notNull(),
   hits: integer("hits").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  
 });

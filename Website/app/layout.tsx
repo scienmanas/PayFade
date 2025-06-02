@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Footer } from "@/app/ui/universal/Footer";
 import "@/app/globals.css";
 import { Viewport } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.BASE_URL as string),
   title: `${process.env.SITE_NAME} | Home`,
-  description: "",
-  keywords: [],
+  description:
+    "FayPade is an Open Source platform to help you change the website opacity if the client does't pay for your service.",
+  keywords: [
+    "PayFade",
+    "website opacity tool",
+    "adjust opacity",
+    "client payment",
+    "client did not pay",
+    "open source tool",
+  ],
   authors: [
     {
       name: "Manas",
@@ -22,8 +29,10 @@ export const metadata: Metadata = {
   robots: "index, follow",
   openGraph: {
     title: `${process.env.SITE_NAME} | Home`,
-    description: "",
+    description:
+      "FayPade is an Open Source platform to help you change the website opacity if the client does't pay for your service.",
     url: process.env.BASE_URL,
+
     type: "article",
     siteName: `${process.env.SITE_NAME}`,
     locale: "en_US",
@@ -31,8 +40,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
+
     title: `${process.env.SITE_NAME} | Home`,
-    description: "",
+    description:
+      "FayPade is an Open Source platform to help you change the website opacity if the client does't pay for your service.",
     creator: "@scienmanas",
     site: process.env.SITE_ENV,
   },
@@ -53,10 +64,7 @@ export default function RootLayout({
         debugMode={process.env.NODE_ENV === "development" ? true : false}
         gaId={process.env.G_ANALYTICS_ID as string}
       />
-      <body className="antialiased w-full h-fit bg-slate-200">
-        {children}
-        <Footer />
-      </body>
+      <body className="antialiased w-full h-fit bg-slate-200">{children}</body>
     </html>
   );
 }

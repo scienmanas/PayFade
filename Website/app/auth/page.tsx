@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import logoImg from "@/public/assets/logo/logo.png";
-import { PageLoader } from "../ui/loaders";
+import { AuthPageLoader } from "../ui/loaders";
 import { firaSansFont } from "@/app/lib/fonts";
 
 export default function Auth() {
@@ -64,7 +64,7 @@ export default function Auth() {
     checkAuth();
   }, [router]);
 
-  if (!mounted) return <PageLoader />;
+  if (!mounted) return <AuthPageLoader />;
   else
     return (
       <div

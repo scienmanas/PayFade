@@ -5,9 +5,8 @@ import BMCsvg from "@/public/assets/donation/bmc.svg";
 import { FaGithub } from "react-icons/fa";
 
 export function Navbar() {
-  const donationLink = {
-    community: "",
-    github: "",
+  const componentLink = {
+    github: "https://github.com/scienmanas/PayFade",
     bmc: "https://www.buymeacoffee.com/scienmanas",
   };
 
@@ -20,10 +19,10 @@ export function Navbar() {
           </Link>
         </div>
         <div className="options flex flex-row gap-3 items-center">
-          <Link href={donationLink.github}>
+          <Link href={componentLink.github}>
             <FaGithub className="text-2xl" />
           </Link>
-          <Link href={donationLink.bmc}>
+          <Link href={componentLink.bmc}>
             <Image height={35} src={BMCsvg} alt="donate" />
           </Link>
         </div>

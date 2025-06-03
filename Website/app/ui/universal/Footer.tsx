@@ -108,7 +108,7 @@ export function Footer() {
               Consider supporting our work through donations to help us continue
               building amazing projects.
             </p>
-            <div ref={donationContainerRef} className="donate-button relative">
+            <div ref={donationContainerRef} className="donate-button relative w-fit h-fit">
               <Donation isDonationOpened={isDonationOpened} />
               <button
                 onClick={() => setisDonationOpened(!isDonationOpened)}

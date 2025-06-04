@@ -1,20 +1,25 @@
 "use client";
 
-import { PageLoader } from "@/app/ui/loaders";
+import { AuthPageLoader } from "@/app/ui/loaders";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Footer } from "@/app/ui/universal/Footer";
+import { Navbar } from "@/app/ui/dashboard/Navbar";
+import { Hero } from "@/app/ui/dashboard/Hero";
+import { CreateRecord } from "@/app/ui/dashboard/CreateRecord";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
+  // States
   const [userData, setUserData] = useState<{
     name: string;
     email: string;
     profilePhoto: string;
   } | null>(null);
- 
 
+  // This effect checks if the user is authenticated
   useEffect(() => {
     const checkAuth = async () => {
       const response = await fetch("/api/auth/user", {
@@ -23,7 +28,7 @@ export default function DashboardPage() {
         credentials: "include",
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         const data = await response.json();
         setUserData({
           name: data.name,
@@ -39,12 +44,20 @@ export default function DashboardPage() {
     checkAuth();
   }, [router]);
 
-  if (!mounted) return <PageLoader />;
-
+  if (!mounted) return <AuthPageLoader />;
   else
     return (
-      <section className="w-full h-fit relative flex flex-col items-center justify-center gap-4">
-        Hello World
+      <section className="dashboard w-full h-fit relative flex flex-col items-center justify-center gap-4">
+        <Navbar
+          name={userData?.name ?? ""}
+          profilePic={userData?.profilePhoto ?? ""}
+          email={userData?.email ?? ""}
+        />
+        <div className="page-contents w-full max-w-screen-xl h-fit flex flex-col gap-4 mt-20 p-4">
+          <Hero />
+          <CreateRecord />
+        </div>
+        <Footer />
       </section>
     );
 }

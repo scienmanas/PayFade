@@ -1,37 +1,49 @@
 import type { Metadata } from "next";
-import { Viewport } from "next";
-
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.BASE_URL as string),
-  title: "My Pookie | Dashboard",
+  title: `${process.env.SITE_NAME} | Dashboard`,
   description:
-    "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
-  keywords: ["valentine", "saas", "anime-based", "pookie"],
-  authors: { name: "Manas", url: "https://scienmanas.xyz" },
+    "FayPade is an Open Source platform to help you change the website opacity if the client does't pay for your service.",
+  keywords: [
+    "PayFade",
+    "website opacity tool",
+    "adjust opacity",
+    "client payment",
+    "client did not pay",
+    "open source tool",
+  ],
+  authors: [
+    {
+      name: "Manas",
+      url: "https://scienmanas.xyz",
+    },
+    {
+      name: "Nikhil Srivastava",
+      url: "https://nikhilsrv.page",
+    },
+  ],
   robots: "index, follow",
   openGraph: {
-    title: "My Pookie | Dashboard",
+    title: `${process.env.SITE_NAME} | Dashboard`,
     description:
-      "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
+      "FayPade is an Open Source platform to help you change the website opacity if the client does't pay for your service.",
     url: process.env.BASE_URL,
-    type: "profile",
+
+    type: "article",
+    siteName: `${process.env.SITE_NAME}`,
     locale: "en_US",
-    siteName: process.env.SITE_NAME as string,
+    authors: ["Manas", "Nikhil Srivastava"],
   },
   twitter: {
     card: "summary",
-    title: "My Pookie | Dashboard",
+
+    title: `${process.env.SITE_NAME} | Dashboard`,
     description:
-      "Want to wish your loved ones on their special day, here we comes, with a unique way to wish them. Just visit our website and send them a beautiful wish.",
+      "FayPade is an Open Source platform to help you change the website opacity if the client does't pay for your service.",
     creator: "@scienmanas",
-    site: process.env.SITE_NAME as string,
-
+    site: process.env.SITE_ENV,
   },
-};
-
-export const viewport: Viewport = {
-  themeColor: "pink",
 };
 
 export default function Dashboard({
@@ -39,5 +51,5 @@ export default function Dashboard({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="w-full h-fit">{children}</div>;
+  return <section className="w-full h-fit">{children}</section>;
 }

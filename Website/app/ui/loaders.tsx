@@ -1,14 +1,18 @@
-"use-client"
+"use client";
+
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import logoImg from "@/public/assets/logo/logo_letter.png";
+import Link from "next/link";
 
-export function PageLoader () {
+export function AuthPageLoader() {
   const [progress, setProgress] = useState(0);
-  const [loadingText, setLoadingText] = useState('Loading');
+  const [loadingText, setLoadingText] = useState("Loading");
 
+  // Simulate loading progress
   useEffect(() => {
-    // Simulate loading progress
     const progressInterval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
@@ -19,11 +23,11 @@ export function PageLoader () {
 
     // Animate loading text
     const textInterval = setInterval(() => {
-      setLoadingText(prev => {
-        if (prev === 'Loading...') return 'Loading';
-        if (prev === 'Loading') return 'Loading.';
-        if (prev === 'Loading.') return 'Loading..';
-        return 'Loading...';
+      setLoadingText((prev) => {
+        if (prev === "Loading...") return "Loading";
+        if (prev === "Loading") return "Loading.";
+        if (prev === "Loading.") return "Loading..";
+        return "Loading...";
       });
     }, 500);
 
@@ -40,21 +44,24 @@ export function PageLoader () {
         <div className="flex items-center justify-center mb-8">
           <div className="relative">
             {/* Spinning outer ring */}
-            <div className="w-20 h-20 border-4 border-gray-200 rounded-full animate-spin border-t-black"></div>
+            <div className="w-20 h-20 bg-transparent border-4 border-gray-200 rounded-full animate-spin border-t-black"></div>
             {/* Inner logo */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">A</span>
-              </div>
+              <Link href={"/"}>
+                <Image
+                  alt="logo"
+                  src={logoImg}
+                  height={40}
+                  className="rounded-full"
+                />
+              </Link>
             </div>
           </div>
         </div>
 
         {/* Loading Text */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-black">
-            {loadingText}
-          </h2>
+          <h2 className="text-2xl font-semibold text-black">{loadingText}</h2>
           <p className="text-gray-600">
             Please wait while we prepare everything for you
           </p>
@@ -67,7 +74,7 @@ export function PageLoader () {
             <span>{Math.round(progress)}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-            <div 
+            <div
               className="h-full bg-black rounded-full transition-all duration-300 ease-out"
               style={{ width: `${Math.min(progress, 100)}%` }}
             ></div>
@@ -77,8 +84,14 @@ export function PageLoader () {
         {/* Animated Dots */}
         <div className="flex justify-center space-x-2">
           <div className="w-3 h-3 bg-black rounded-full animate-bounce"></div>
-          <div className="w-3 h-3 bg-black rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-          <div className="w-3 h-3 bg-black rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div
+            className="w-3 h-3 bg-black rounded-full animate-bounce"
+            style={{ animationDelay: "0.1s" }}
+          ></div>
+          <div
+            className="w-3 h-3 bg-black rounded-full animate-bounce"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
         </div>
 
         {/* Loading Steps Indicator */}
@@ -88,20 +101,44 @@ export function PageLoader () {
             <span className="text-gray-700">Initializing application</span>
           </div>
           <div className="flex items-center justify-center space-x-2">
-            <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${progress > 30 ? 'bg-black' : 'bg-gray-300'}`}></div>
-            <span className={`transition-colors duration-300 ${progress > 30 ? 'text-gray-700' : 'text-gray-400'}`}>
+            <div
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                progress > 30 ? "bg-black" : "bg-gray-300"
+              }`}
+            ></div>
+            <span
+              className={`transition-colors duration-300 ${
+                progress > 30 ? "text-gray-700" : "text-gray-400"
+              }`}
+            >
               Loading resources
             </span>
           </div>
           <div className="flex items-center justify-center space-x-2">
-            <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${progress > 60 ? 'bg-black' : 'bg-gray-300'}`}></div>
-            <span className={`transition-colors duration-300 ${progress > 60 ? 'text-gray-700' : 'text-gray-400'}`}>
+            <div
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                progress > 60 ? "bg-black" : "bg-gray-300"
+              }`}
+            ></div>
+            <span
+              className={`transition-colors duration-300 ${
+                progress > 60 ? "text-gray-700" : "text-gray-400"
+              }`}
+            >
               Preparing interface
             </span>
           </div>
           <div className="flex items-center justify-center space-x-2">
-            <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${progress > 90 ? 'bg-black' : 'bg-gray-300'}`}></div>
-            <span className={`transition-colors duration-300 ${progress > 90 ? 'text-gray-700' : 'text-gray-400'}`}>
+            <div
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                progress > 90 ? "bg-black" : "bg-gray-300"
+              }`}
+            ></div>
+            <span
+              className={`transition-colors duration-300 ${
+                progress > 90 ? "text-gray-700" : "text-gray-400"
+              }`}
+            >
               Almost ready
             </span>
           </div>
@@ -110,7 +147,10 @@ export function PageLoader () {
         {/* Pulse Animation Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-96 h-96 border border-gray-100 rounded-full animate-ping opacity-20"></div>
-          <div className="absolute w-64 h-64 border border-gray-200 rounded-full animate-ping opacity-30" style={{ animationDelay: '0.5s' }}></div>
+          <div
+            className="absolute w-64 h-64 border border-gray-200 rounded-full animate-ping opacity-30"
+            style={{ animationDelay: "0.5s" }}
+          ></div>
         </div>
       </div>
 
@@ -129,5 +169,4 @@ export function PageLoader () {
       </div>
     </div>
   );
-};
-
+}

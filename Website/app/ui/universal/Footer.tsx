@@ -10,6 +10,7 @@ import { FaEthereum } from "react-icons/fa";
 import { SiBuymeacoffee } from "react-icons/si";
 import { IconType } from "react-icons";
 import { useState, useEffect, useRef } from "react";
+import { firaSansFont } from "@/app/lib/fonts";
 
 interface Author {
   name: string;
@@ -60,7 +61,7 @@ export function Footer() {
   }, [isDonationOpened]);
 
   return (
-    <footer className="w-full bg-neutral-900 text-white mt-20">
+    <footer className={`w-full bg-neutral-900 text-white mt-20 ${firaSansFont.className}`}>
       <div className="max-w-screen-xl mx-auto px-6 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
@@ -108,7 +109,10 @@ export function Footer() {
               Consider supporting our work through donations to help us continue
               building amazing projects.
             </p>
-            <div ref={donationContainerRef} className="donate-button relative w-fit h-fit">
+            <div
+              ref={donationContainerRef}
+              className="donate-button relative w-fit h-fit"
+            >
               <Donation isDonationOpened={isDonationOpened} />
               <button
                 onClick={() => setisDonationOpened(!isDonationOpened)}
@@ -180,6 +184,10 @@ function Donation({ isDonationOpened }: { isDonationOpened: boolean }) {
 
   return (
     <motion.div
+      initial={{
+        opacity: 0,
+        y: -10,
+      }}
       animate={{
         opacity: isDonationOpened ? 1 : 0,
         y: isDonationOpened ? 0 : -10,
@@ -188,6 +196,10 @@ function Donation({ isDonationOpened }: { isDonationOpened: boolean }) {
     >
       {donationLinks.map((link, index) => (
         <motion.div
+          initial={{
+            opacity: 0,
+            y: -10,
+          }}
           animate={{
             opacity: isDonationOpened ? 1 : 0,
             y: isDonationOpened ? 0 : -10,

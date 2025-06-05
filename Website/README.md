@@ -1,4 +1,4 @@
-- Landing is left - Nikhil
+- Landing enhancement - Manas
 - Dashboard is left
 - How to make smooth fluid flow in this like there are in other startup website - Manas at last when landing page is complete
--- Fix and looking of ui code nd error of auth page need to see when constrcting the page
+-- Fix and looking of ui code nd error of auth page need to see when constrcting the page (Nikhol error)

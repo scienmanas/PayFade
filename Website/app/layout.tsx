@@ -64,7 +64,7 @@ export default function RootLayout({
         debugMode={process.env.NODE_ENV === "development" ? true : false}
         gaId={process.env.G_ANALYTICS_ID as string}
       />
-      <body className="antialiased w-full h-fit bg-slate-200">{children}</body>
+      <body className="antialiased w-full h-fit bg-slate-100">{children}</body>
     </html>
   );
 }

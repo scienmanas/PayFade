@@ -67,7 +67,7 @@ export default async function PrivacyPolicy({ params }: PageProps) {
           <div className="heading font-semibold text-2xl sm:text-3xl md:text-4xl underline">
             {data.heading}
           </div>
-          <div className="content text-base text-neutral-700 dark:text-neutral-300 sm:text-lg markdown">
+          <div className="content text-base text-neutral-700 dark:text-neutral-300 sm:text-lg markdown font-mono">
             <Markdown>{data.content}</Markdown>
           </div>
         </div>

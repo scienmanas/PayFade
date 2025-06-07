@@ -61,7 +61,9 @@ export function Footer() {
   }, [isDonationOpened]);
 
   return (
-    <footer className={`w-full bg-neutral-900 text-white mt-20 ${firaSansFont.className}`}>
+    <footer
+      className={`w-full bg-neutral-900 text-white mt-20 ${firaSansFont.className}`}
+    >
       <div className="max-w-screen-xl mx-auto px-6 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
@@ -71,7 +73,7 @@ export function Footer() {
               alt="logo"
               src={logoImg}
               height={30}
-              className="rounded-lg"
+              className="rounded-sm"
             />
             <p className="text-gray-300 text-sm leading-relaxed">
               Crafted with passion and precision by two dedicated developers.

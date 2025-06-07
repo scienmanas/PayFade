@@ -74,3 +74,53 @@
 }
 
 /* ----------------------------------------------- */
+
+
+@keyframes rotateDashes {
+  0% {
+      stroke-dashoffset: 0;
+  }
+  100% {
+      stroke-dashoffset: 60;
+  }
+}
+
+.rotating-dashed-border {
+  position: relative;
+  display: inline-block;
+}
+
+.rotating-dashed-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: inherit;
+  background: transparent;
+  pointer-events: none;
+}
+
+.rotating-dashed-border svg {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  pointer-events: none;
+}
+
+.rotating-border-rect {
+  fill: none;
+  stroke: #2d2b55;
+  stroke-width: 1;
+  stroke-dasharray: 8 4;
+  stroke-opacity: 0.3;
+  animation: rotateDashes 2s linear infinite;
+  transition: stroke-opacity 0.2s ease;
+}
+
+.rotating-dashed-border:hover .rotating-border-rect {
+  stroke-opacity: 0.8;
+}

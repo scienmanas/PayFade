@@ -85,7 +85,7 @@ export default function Auth() {
                   />
                 </div>
                 <h2 className="text-2xl font-semibold text-gray-900">
-                  Sign up
+                  Login/Sign up
                 </h2>
                 <p className="text-gray-600 mt-2">
                   Glad to have you here — many developers are already building

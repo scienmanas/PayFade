@@ -1,82 +1,106 @@
-import { useState } from "react";
+"use client";
 
-// FAQ Component
+import React, { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
+import { firaSansFont } from "@/app/lib/fonts";
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<null | number>(null);
 
-  const faqs = [
+  const faqData: FAQItem[] = [
     {
-      question: "How secure is PayFade?",
-      answer: "PayFade uses bank-grade encryption and follows industry best practices for security. All transactions are protected with end-to-end encryption, and we're compliant with PCI DSS standards."
+      question: "Are there any terms for use?",
+      answer:
+        "Yes, PayFade is intended for ethical use only. It should not be used to harm or disrupt websites without consent. Always ensure you have permission from the website owner before applying any opacity changes.",
     },
     {
-      question: "What are the transaction fees?",
-      answer: "We offer competitive rates starting at 1.4% + $0.30 per transaction for domestic payments, with lower rates for high-volume merchants. International transactions start at 2.9% + $0.30."
+      question: "Is it open source?",
+      answer:
+        "Yes, PayFade is an open-source project. You can find the source code on our GitHub repository. Contributions are welcome!",
     },
     {
-      question: "How long do transfers take?",
-      answer: "Most transfers are processed instantly. Bank transfers typically take 1-3 business days, while crypto transactions are confirmed within minutes."
+      question: "How do I use PayFade?",
+      answer:
+        "You can refer to the demo video in the landing page. If you need further assistance, please check the documentation on our GitHub repository or contact us (email mention just above the Footer).",
     },
     {
-      question: "Which countries do you support?",
-      answer: "PayFade supports over 180 countries worldwide. We're constantly expanding our reach to serve more regions and currencies."
+      question: "Are you backed by any organization?",
+      answer:
+        "No, PayFade is an independent open-source project. Currently we are not backed by any organization or company, but we are seeking for donations to support the project.",
     },
     {
-      question: "Is there an API available?",
-      answer: "Yes, we provide comprehensive REST APIs and SDKs for popular programming languages. Our documentation includes code examples and testing environments."
+      question: "Can I contribute to PayFade?",
+      answer:
+        "Absolutely! We welcome contributions from the community. You can contribute by reporting issues, suggesting features, or submitting pull requests on our GitHub repository.",
     },
     {
-      question: "What support options are available?",
-      answer: "We offer 24/7 customer support through live chat, email, and phone. Premium customers get dedicated account managers and priority support."
-    }
+      question: "How can I contact support?",
+      answer:
+        "You can mail at iamscientistmanas@gmail.com. For urgent issues, please open an issue on our GitHub repository, and we will get back to you as soon as possible.",
+    },
   ];
 
   return (
-    <section className="py-20 px-4 ">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-slate-300 text-xl">
-            Everything you need to know about PayFade
-          </p>
-        </div>
-        
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div 
-              key={index}
-              className="border border-slate-700 rounded-lg overflow-hidden"
+    <section
+      className={`FAQ w-full h-fit p-4 flex flex-col items-center justify-center gap-14 font-sans ${firaSansFont.className}`}
+    >
+      <div className="flex w-fit h-fit flex-col items-center justify-center gap-2">
+        <h1 className="text-center w-fit h-fit text-lg sm:text-2xl font-bold text-gray-900 mb-4">
+          Frequently Asked Questions
+        </h1>
+        <p className="text-sm sm:text-base text-center w-fit h-full text-gray-600 max-w-2xl mx-auto">
+          Find answers to common questions about our products and services.
+          Can't find what you're looking for? Contact our support team.
+        </p>
+      </div>
+
+      <div className="bg-white w-full flex flex-col gap-0 overflow-hidden">
+        {faqData.map((faq, index) => (
+          <div key={index}>
+            <button
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              className="w-full px-4 py-4 text-left flex items-center justify-between duration-200"
             >
-              <button
-                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-slate-800 transition-colors duration-200"
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                {faq.question}
+              </h3>
+              <div
+                className={`transition-transform duration-200 ease-in-out ${
+                  openIndex === index ? "rotate-180" : ""
+                }`}
               >
-                <span className="font-semibold text-white text-lg">
-                  {faq.question}
-                </span>
-                <span className={`text-slate-400 transform transition-transform duration-200 ${
-                  openIndex === index ? 'rotate-180' : ''
-                }`}>
-                  ▼
-                </span>
-              </button>
-              
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}>
-                <div className="px-6 py-4 bg-slate-800 border-t border-slate-700">
-                  <p className="text-slate-300 leading-relaxed">
-                    {faq.answer}
-                  </p>
-                </div>
+                <FaChevronDown className="w-3 h-3 text-gray-600" />
+              </div>
+            </button>
+
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                openIndex === index
+                  ? "max-h-96 opacity-100"
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              <div className="px-4 pb-4">
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                  {faq.answer}
+                </p>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Divider between FAQ items */}
+            {index < faqData.length - 1 && (
+              <div className="px-4">
+                <div className="border-t border-dashed border-gray-300"></div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );
 }
-

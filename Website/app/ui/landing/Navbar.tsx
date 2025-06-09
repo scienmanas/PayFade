@@ -3,17 +3,35 @@
 import Image from "next/image";
 import Link from "next/link";
 import logoImg from "@/public/assets/logo/logo.png";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { firaSansFont } from "@/app/lib/fonts";
 
 export function Navbar() {
   // Hamburger Menu
   const [isHamburgerOpened, setIsHamburgerOpened] = useState<boolean>(false);
+  const hamburgerRef = useRef<HTMLDivElement>(null);
 
   const tabs = [
     { text: "Github", link: "https://github.com/scienmanas/PayFade" },
     { text: "Contact", link: "mailto:iamscientistmanas@gmail.com" },
   ];
+
+  // For hamburger menu close on outside click
+  useEffect(() => {
+    if (!isHamburgerOpened) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        hamburgerRef.current &&
+        !hamburgerRef.current.contains(event.target as Node)
+      )
+        setIsHamburgerOpened(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isHamburgerOpened]);
 
   return (
     <nav
@@ -62,6 +80,7 @@ export function Navbar() {
                 <div className="absolute z-0 glow-gradient flex sm:hidden bg-transparent bg-gradient-to-br from-[#2d2b55] to-pink-500 w-full h-full inset-0 rounded-lg m-auto blur-md"></div>
               )}
               <div
+                ref={hamburgerRef}
                 className={`relative z-10 bg-[#f4f4f5] sm:bg-transparent w-full h-full content-wrapper flex sm:flex-row flex-col gap-4 rounded-lg  p-4 sm:p-0 sm:items-center items-start sm:border-none border-2 border-[#2d2b55] sm:flex ${
                   isHamburgerOpened ? "flex" : "hidden"
                 } `}

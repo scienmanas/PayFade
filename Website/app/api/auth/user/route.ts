@@ -121,6 +121,10 @@ export async function POST(req: NextRequest) {
           },
         });
 
+        console.log("***********************");
+        console.log(userResponse);
+        console.log("***********************");
+
         const emailResponse = await fetch(
           "https://api.github.com/user/emails",
           {
@@ -131,6 +135,10 @@ export async function POST(req: NextRequest) {
             },
           }
         );
+
+        console.log("***********************");
+        console.log(emailResponse);
+        console.log("***********************");
 
         // Check if the response is 200 and parse the user data
         if (userResponse.status !== 200 || emailResponse.status !== 200) {

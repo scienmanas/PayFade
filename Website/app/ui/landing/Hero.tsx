@@ -35,7 +35,7 @@ export function Hero() {
                         href="https://github.com/scienmanas/PayFade"
                         className="inline-block"
                       >
-                        <span className="decoration-[#2d2b55] relative underline decoration-double hover:text-[#4a4788] duration-200 py-[5px] px-[10px] rotating-dashed-border">
+                        <span className="decoration-[#2d2b55] relative underline decoration-double text-neutral-700 hover:text-[#4a4788] duration-200 py-[5px] px-[10px] rotating-dashed-border">
                           <svg className="absolute inset-0">
                             <rect
                               className="rotating-border-rect"

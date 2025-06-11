@@ -7,6 +7,7 @@ import { Footer } from "@/app/ui/universal/Footer";
 import { Navbar } from "@/app/ui/dashboard/Navbar";
 import { Hero } from "@/app/ui/dashboard/Hero";
 import { CreateRecord } from "@/app/ui/dashboard/CreateRecord";
+import { Records } from "@/app/ui/dashboard/Records";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function DashboardPage() {
     name: string;
     email: string;
     profilePhoto: string;
+    id: string;
   } | null>(null);
 
   // This effect checks if the user is authenticated
@@ -34,6 +36,7 @@ export default function DashboardPage() {
           name: data.name,
           email: data.email,
           profilePhoto: data.profilePic,
+          id: data.id,
         });
         setMounted(true);
       } else {
@@ -53,9 +56,10 @@ export default function DashboardPage() {
           profilePic={userData?.profilePhoto ?? ""}
           email={userData?.email ?? ""}
         />
-        <div className="page-contents w-full max-w-screen-xl h-fit flex flex-col gap-4 mt-20 p-4">
-          <Hero />
+        <div className="page-contents w-full max-w-screen-xl h-fit flex flex-col gap-10 mt-20 p-4">
+          <Hero name={userData?.name as string} />
           <CreateRecord />
+          <Records />
         </div>
         <Footer />
       </section>

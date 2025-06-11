@@ -121,10 +121,6 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        console.log("***********************");
-        console.log(userResponse);
-        console.log("***********************");
-
         const emailResponse = await fetch(
           "https://api.github.com/user/emails",
           {
@@ -135,10 +131,6 @@ export async function POST(req: NextRequest) {
             },
           }
         );
-
-        console.log("***********************");
-        console.log(emailResponse);
-        console.log("***********************");
 
         // Check if the response is 200 and parse the user data
         if (userResponse.status !== 200 || emailResponse.status !== 200) {
@@ -152,7 +144,9 @@ export async function POST(req: NextRequest) {
         // Parse the user data and get data
         const userData = await userResponse.json();
         const emailData = await emailResponse.json();
-        const name = userData.name;
+
+        // Null is also returned from github :)
+        const name = userData.name ? userData.name : "Developer";
         const profilePic = userData.avatar_url;
 
         // Get the primary email from the emails array

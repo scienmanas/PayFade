@@ -28,7 +28,52 @@ export function Records() {
           website API keys will not work.
         </p>
       </div>
-      <div className="records"></div>
+      <div className="records w-full h-fit">
+        <RecordTable websiteRecordData={records ? [records] : []} />
+      </div>
     </section>
+  );
+}
+
+// id: string;
+// website_name: string;
+// website_url: string;
+// api_key: string;
+// hits: number;
+// createdAt: string;
+
+function RecordTable({
+  websiteRecordData,
+}: {
+  websiteRecordData: WebsiteRecordData[];
+}) {
+  return (
+    <div className="record-table w-full overflow-x-auto bg-white shadow-md">
+      <table className="w-full border-collapse">
+        <thead className="column-headings">
+          <tr className="bg-gray-100 text-left text-sm sm:text-base">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center">
+              Website Name
+            </th>
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center">
+              URL
+            </th>
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center">
+              API Key
+            </th>
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center">
+              Hits
+            </th>
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center">
+              Created On
+            </th>
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   );
 }

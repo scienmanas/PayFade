@@ -65,16 +65,16 @@ export function AccountDetails({
       if (
         accountDetailsContainerRef.current &&
         !accountDetailsContainerRef.current.contains(event.target as Node)
-      ) {
+      )
         setIsModalOpen(false);
-      }
     };
 
     document.addEventListener("mousedown", handleOutsideClick);
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  });
+  }),
+    [isModalOpen];
 
   return (
     <div

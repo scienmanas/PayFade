@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import logoImg from "@/public/assets/logo/logo.png";
 import { AuthPageLoader } from "../ui/loaders";
@@ -77,15 +78,17 @@ export default function Auth() {
               {/* Logo/Brand Section */}
               <div className="text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <Image
-                    src={logoImg}
-                    alt="logoImg"
-                    height={50}
-                    className="rounded-lg"
-                  />
+                  <Link href={"/"} className="w-fit h-fit">
+                    <Image
+                      src={logoImg}
+                      alt="logoImg"
+                      height={50}
+                      className="rounded-lg"
+                    />
+                  </Link>
                 </div>
                 <h2 className="text-2xl font-semibold text-gray-900">
-                  Sign up
+                  Login/Sign up
                 </h2>
                 <p className="text-gray-600 mt-2">
                   Glad to have you here — many developers are already building

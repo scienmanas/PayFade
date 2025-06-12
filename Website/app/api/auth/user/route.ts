@@ -144,7 +144,9 @@ export async function POST(req: NextRequest) {
         // Parse the user data and get data
         const userData = await userResponse.json();
         const emailData = await emailResponse.json();
-        const name = userData.name;
+
+        // Null is also returned from github :)
+        const name = userData.name ? userData.name : "Developer";
         const profilePic = userData.avatar_url;
 
         // Get the primary email from the emails array

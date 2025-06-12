@@ -13,7 +13,11 @@ export function AuthPageLoader() {
   useEffect(() => {
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        if (prev >= 80) {
+          setLoadingText("Almost there...");
+          clearInterval(progressInterval);
+          return prev;
+        } else if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
         }

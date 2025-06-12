@@ -26,6 +26,10 @@ This project is a web-app that allows an individual to manage his websites and i
 
 To be updated after final push
 
+# API Reference
+
+To be updated after final push
+
 # Project Structure
 
 Project structure need to be update after final push
@@ -62,7 +66,6 @@ To run the project locally, you need to have Node.js and npm installed on your m
 4. Run the app using `npm run dev` in the `Website` folder.
 
 5. To run lambda function, you need to deploy them in AWS account and do the API Gateway setup.
-
 
 # Contribution
 

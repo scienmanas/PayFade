@@ -2,12 +2,29 @@
 
 import { firaSansFont } from "@/app/lib/fonts";
 import { IoCreateOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useReducer, useRef } from "react";
 import { motion } from "framer-motion";
+import { useRecordsList } from "@/app/hooks/useRecordsList";
+
+interface formState {
+  isFormStateOpen: boolean;
+  formMode: "create" | "modify";
+  formError: string | null;
+  formSuccess: string | null;
+  formData: {
+    website_name: string;
+    website_url: string;
+    api_key: string;
+  };
+}
 
 export function CreateRecord() {
-  // States
-  const [showForm, setShowForm] = useState<boolean>(false);
+  // States, reducers, and refs
+  // const initialState = {
+  //   isFormOpen:
+  // }
+  const { records, setRecords } = useRecordsList();
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <section

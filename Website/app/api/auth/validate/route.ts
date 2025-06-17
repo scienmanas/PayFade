@@ -111,9 +111,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     // Clear the invalid session token cookie
     (await cookieStore).delete("auth-token");
-    return NextResponse.json(
-      { error: "Invalid auth token" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Invalid auth token" }, { status: 401 });
   }
 }

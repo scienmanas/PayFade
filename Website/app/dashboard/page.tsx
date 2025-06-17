@@ -8,6 +8,7 @@ import { Navbar } from "@/app/ui/dashboard/Navbar";
 import { Hero } from "@/app/ui/dashboard/Hero";
 import { CreateRecord } from "@/app/ui/dashboard/CreateRecord";
 import { Records } from "@/app/ui/dashboard/Records";
+import { RecordsContext } from "@/app/hooks/useRecordsList";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -58,8 +59,12 @@ export default function DashboardPage() {
         />
         <div className="page-contents w-full max-w-screen-xl h-fit flex flex-col gap-10 mt-20 p-4">
           <Hero name={userData?.name as string} />
-          <CreateRecord />
-          <Records />
+          <RecordsContext.Provider
+            value={{ records: null, setRecords: () => [] }}
+          >
+            <CreateRecord />
+            <Records />
+          </RecordsContext.Provider>
         </div>
         <Footer />
       </section>

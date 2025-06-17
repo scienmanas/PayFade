@@ -3,7 +3,7 @@ export interface OAuthData {
   token: string;
 }
 
-export interface WebsiteRecordData {
+export interface RecordsType {
   id: string;
   website_name: string;
   website_url: string;

@@ -31,13 +31,31 @@ export async function GET(req: NextRequest) {
     if (!idToken)
       return NextResponse.json({ error: "ID Token missing" }, { status: 400 });
 
+    // Get email and create user if it didn't exists
+    const ticket = await OAuthGoogleClient.verifyIdToken({
+      idToken: idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    })
+
+    // Get the payload
+    const payload = ticket.getPayload();
+    if (!payload) 
+      return NextResponse.json(
+    { error: "Payload Error" },
+    { status: 500 },
+  );
+
+  const name = payload.name?? null;
+  const email = payload.email?? null;
+  
+
     // Build Payload
-    const payload: OAuthData = {
+    const jwtPayload: OAuthData = {
       provider: "google",
       token: idToken,
     };
     // Sign the JWT token
-    const signedJWT = jwt.sign(payload, process.env.JWT_SECRET as string, {
+    const signedJWT = jwt.sign(jwtPayload, process.env.JWT_SECRET as string, {
       algorithm: "HS256",
       expiresIn: "1h", // Token expiration time
     });

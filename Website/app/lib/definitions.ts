@@ -1,6 +1,5 @@
-export interface OAuthData {
-  provider: "google" | "github";
-  token: string;
+export interface JWTPayloadType {
+  email: string;
 }
 
 export interface RecordsType {

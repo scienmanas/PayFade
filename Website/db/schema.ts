@@ -15,10 +15,12 @@ export const user = pgTable("user", {
     .default(sql`gen_random_uuid()`),
   name: varchar("name", { length: 255 }).notNull(),
   email: text("email").notNull(),
+  profile_pic: text("profile_pic"), // Can be null
   createdAt: timestamp("created_at").defaultNow(),
+  flag: varchar("flag", { length: 255 }).default("good").notNull(),
 });
 
-export const website = pgTable("website,", {
+export const website = pgTable("website", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
@@ -30,5 +32,4 @@ export const website = pgTable("website,", {
   api_key: varchar("api_key", { length: 255 }).notNull(),
   hits: integer("hits").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
-  
 });

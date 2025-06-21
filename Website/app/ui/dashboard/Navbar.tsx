@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { firaSansFont } from "@/app/lib/fonts";
 import { FaSortDown } from "react-icons/fa";
+import noProfilePic from "@/public/assets/misc/noProfilePic.png";
 
 export function Navbar({
   name,
@@ -15,12 +16,14 @@ export function Navbar({
 }: {
   name: string;
   email: string;
-  profilePic: string;
+  profilePic: string | null;
 }) {
   const componentLink = {
     github: "https://github.com/scienmanas/PayFade",
     bmc: "https://www.buymeacoffee.com/scienmanas",
   };
+
+  console.log(profilePic);
 
   return (
     <nav className="w-full fixed top-0 z-20 h-fit flex items-center justify-center bg-white border  border-neutral-200 backdrop-blur-xl">
@@ -51,7 +54,7 @@ export function AccountDetails({
 }: {
   name: string;
   email: string;
-  profilePic: string;
+  profilePic: string | null;
 }) {
   // State and refs for managing the modal and logout state
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -84,7 +87,7 @@ export function AccountDetails({
       <Image
         draggable={false}
         onClick={() => setIsModalOpen((prev) => !prev)}
-        src={profilePic}
+        src={profilePic ? profilePic : noProfilePic}
         alt="user_pic"
         width={35}
         height={35}

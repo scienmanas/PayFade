@@ -2,7 +2,10 @@ import { OAuthGoogleClient } from "@/app/config/OAuth";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { OAuthData } from "@/app/lib/definitions";
+import { JWTPayloadType } from "@/app/lib/definitions";
+import { db } from "@/db/index";
+import { user } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   // Clear any existing auth-token cookie
@@ -28,31 +31,67 @@ export async function GET(req: NextRequest) {
     const { tokens } = await OAuthGoogleClient.getToken(code);
     const idToken = tokens.id_token;
 
+    // If no ID Token, return error
     if (!idToken)
       return NextResponse.json({ error: "ID Token missing" }, { status: 400 });
 
-    // Get email and create user if it didn't exists
+    // Verify the ID Token and get the payload
     const ticket = await OAuthGoogleClient.verifyIdToken({
       idToken: idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
-    })
+    });
 
-    // Get the payload
+    // Get the payload from the ticket
     const payload = ticket.getPayload();
-    if (!payload) 
+    if (!payload)
       return NextResponse.json(
-    { error: "Payload Error" },
-    { status: 500 },
-  );
+        { error: "Invalid/No ID Token" },
+        { status: 400 }
+      );
+    // Extract user information from the payload
+    if (!payload.email || !payload.name)
+      return NextResponse.json(
+        { error: "Required user information missing, oauth problem" },
+        { status: 400 }
+      );
 
-  const name = payload.name?? null;
-  const email = payload.email?? null;
-  
+    // Extract user details
+    const email: string = payload.email as string;
+    const name: string = payload.name as string;
+    const profilePic: null | string = payload.picture ?? null;
+
+    // Check if the user already exists in the database
+    const userExists = await db
+      .select()
+      .from(user)
+      .where(eq(user.email, email));
+
+    // Checking if the user exists and updating their profile picture if it is null
+    if (userExists.length > 0) {
+      if (userExists[0].flag === "blocked") return;
+      NextResponse.json(
+        { error: "Your account has been blocked" },
+        { status: 403 }
+      );
+      // User already exists, update their profile picture if it is null
+      if (userExists[0].profile_pic === null && profilePic) {
+        await db
+          .update(user)
+          .set({ profile_pic: profilePic })
+          .where(eq(user.email, email));
+      }
+    } else {
+      // User does not exist, insert a new user
+      await db.insert(user).values({
+        name: name,
+        email: email,
+        profile_pic: profilePic, // null is accepted
+      });
+    }
 
     // Build Payload
-    const jwtPayload: OAuthData = {
-      provider: "google",
-      token: idToken,
+    const jwtPayload: JWTPayloadType = {
+      email: email,
     };
     // Sign the JWT token
     const signedJWT = jwt.sign(jwtPayload, process.env.JWT_SECRET as string, {

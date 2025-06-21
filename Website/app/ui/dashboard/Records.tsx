@@ -8,7 +8,6 @@ import { useRecordsList } from "@/app/hooks/useRecordsList";
 // Delete endpoint remain
 // Modify endpoint remain
 
-
 export function Records() {
   const { records, setRecords } = useRecordsList();
   const [mounted, setMounted] = useState<boolean>(false);

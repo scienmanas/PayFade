@@ -60,12 +60,15 @@ To run the project locally, you need to have Node.js and npm installed on your m
 | JWT_SECRET                      | JWT Secret                                     | The JWT Secret                       |
 
 2. The database used is PostgresSQL by Supabase, so the code is written according to that. Perform a migration using command: `npx drizzle-kit push` before running the app.
-
 3. Install the dependencies by running `npm install` in the `Website` folder.
-
 4. Run the app using `npm run dev` in the `Website` folder.
-
 5. To run lambda function, you need to deploy them in AWS account and do the API Gateway setup.
+
+# Troubleshoot
+
+└─$ npx drizzle-kit generate
+
+└─$ npx drizzle-kit push
 
 # Contribution
 

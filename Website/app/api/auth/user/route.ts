@@ -31,11 +31,11 @@ export async function POST(req: NextRequest) {
     }
 
     // If the JWT is verified, query the database and return user data
-    const email = (jwtDecoded as JWTPayloadType).email;
+    const id: string = (jwtDecoded as JWTPayloadType).id;
     const userData = await db
       .select()
       .from(user)
-      .where(eq(user.email, email))
+      .where(eq(user.id, id))
       .limit(1);
 
     if (userData.length === 0) {

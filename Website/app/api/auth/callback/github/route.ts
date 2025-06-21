@@ -108,20 +108,18 @@ export async function GET(req: NextRequest) {
     const email = primaryEmail.email;
 
     // Check if the user already exists in the database
-    const userExists = await db
-      .select()
-      .from(user)
-      .where(eq(user.email, email));
+    let userInfo;
+    userInfo = await db.select().from(user).where(eq(user.email, email));
 
     // Checking if the user exists and updating their profile picture if it is null
-    if (userExists.length > 0) {
-      if (userExists[0].flag === "blocked") return;
+    if (userInfo.length > 0) {
+      if (userInfo[0].flag === "blocked") return;
       NextResponse.json(
         { error: "Your account has been blocked" },
         { status: 403 }
       );
       // User already exists, update their profile picture if it is null
-      if (userExists[0].profile_pic === null && profilePic) {
+      if (userInfo[0].profile_pic === null && profilePic) {
         await db
           .update(user)
           .set({ profile_pic: profilePic })
@@ -129,16 +127,19 @@ export async function GET(req: NextRequest) {
       }
     } else {
       // User does not exist, insert a new user
-      await db.insert(user).values({
-        name: name,
-        email: email,
-        profile_pic: profilePic, // null is accepted
-      });
+      userInfo = await db
+        .insert(user)
+        .values({
+          name: name,
+          email: email,
+          profile_pic: profilePic, // null is accepted
+        })
+        .returning();
     }
 
     // Build Payload
     const jwtPayload: JWTPayloadType = {
-      email: email,
+      id: userInfo[0].id,
     };
 
     // Sign the JWT token

@@ -1,5 +1,5 @@
 export interface JWTPayloadType {
-  email: string;
+  id: string;
 }
 
 export interface RecordsType {

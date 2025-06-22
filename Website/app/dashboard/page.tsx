@@ -57,7 +57,7 @@ export default function DashboardPage() {
           profilePic={userData?.profilePhoto ?? ""}
           email={userData?.email ?? ""}
         />
-        <div className="page-contents w-full max-w-screen-xl h-fit flex flex-col gap-10 mt-20 p-4">
+        <div className="page-contents relative w-full max-w-screen-xl h-fit flex flex-col gap-10 mt-20 p-4">
           <Hero name={userData?.name as string} />
           <RecordsContext.Provider
             value={{ records: null, setRecords: () => [] }}

@@ -4,11 +4,12 @@ export interface JWTPayloadType {
 
 export interface RecordsType {
   id: string;
+  websiteName: string;
   websiteDomain: string;
-  websiteUrl: string;
   apiKey: string;
   hits: number;
   createdAt: string;
+  verified: boolean;
 }
 
 export interface RecordsPostType {

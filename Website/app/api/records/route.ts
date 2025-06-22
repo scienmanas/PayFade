@@ -25,8 +25,19 @@ export async function GET(req: Request) {
       .from(website)
       .where(eq(website.user_id, userId));
 
+    // Generate payload for the response
+    const recordsPayload = records.map((record) => ({
+      id: record.id,
+      websiteName: record.website_name,
+      websiteDomain: record.website_domain,
+      apiKey: record.api_key,
+      hits: record.hits,
+      createdAt: record.createdAt,
+      verified: record.verified,
+    }));
+
     return NextResponse.json(
-      { message: "Records fetched successfully", records: records },
+      { message: "Records fetched successfully", records: recordsPayload },
       { status: 200 }
     );
   } catch (error) {
@@ -93,6 +104,15 @@ export async function POST(req: NextRequest) {
       hits: newRecord[0].hits,
       createdAt: newRecord[0].createdAt,
     };
+
+    // Return a success response with the new record
+    return NextResponse.json(
+      {
+        message: "Record created successfully",
+        record: responsePayload,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Database insertion failed:", error);
     return NextResponse.json(

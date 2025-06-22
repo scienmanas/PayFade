@@ -6,7 +6,7 @@ import { RecordsType } from "@/app/lib/definitions";
 import { useRecordsList } from "@/app/hooks/useRecordsList";
 
 // Delete endpoint remain
-// Modify endpoint remain
+// Verification endpoint
 
 export function Records() {
   const { records, setRecords } = useRecordsList();
@@ -29,7 +29,9 @@ export function Records() {
 
         if (response.status === 200) {
           const data = await response.json();
-          setRecords(data);
+          const recordsData = data.records;
+          console.log(recordsData);
+          setRecords(recordsData);
           setFinalLoadingStatus("success");
         } else {
           setFinalLoadingStatus("failed");
@@ -41,7 +43,7 @@ export function Records() {
         console.log("Error fetching records:", error);
         setRecords(null);
       } finally {
-        setMounted(false);
+        setMounted(true);
       }
     };
 
@@ -51,7 +53,7 @@ export function Records() {
 
   return (
     <section
-      className={`records w-full h-fit flex flex-col gap-4 ${firaSansFont.className}`}
+      className={`records relative z-10 w-full h-fit flex flex-col gap-4 ${firaSansFont.className}`}
     >
       <div className="heading-description-stuff w-fit h-fit flex flex-col gap-2">
         <h2 className="heading w-fit h-fit text-xl sm:text-2xl font-bold">
@@ -109,7 +111,7 @@ function RecordsTable({
             </th>
           </tr>
         </thead>
-        {mounted === true ? (
+        {mounted === false ? (
           <RecordsSkeleton />
         ) : (
           <RecordsTableDataRendered
@@ -150,13 +152,13 @@ function RecordsTableDataRendered({
   return (
     <tbody className="records w-full h-fit">
       {finalLoadingStatus === "success" ? (
-        records?.length === 0 || null ? (
+        records === null || records?.length === 0 ? (
           <tr className="no-records-found">
             <td
               colSpan={6}
               className="text-center border border-gray-200 p-4 text-gray-500 font-bold w-full h-fit text-wrap"
             >
-              No Records Found
+              No Records Found, try adding some 🙂
             </td>
           </tr>
         ) : (
@@ -168,13 +170,13 @@ function RecordsTableDataRendered({
               }`}
             >
               <td className="border border-gray-300 p-2 text-neutral-800 text-center">
-                {record.website_name}
+                {record.websiteName}
               </td>
               <td className="border border-gray-300 p-2 text-neutral-800 text-center">
-                {record.website_url}
+                {record.websiteDomain}
               </td>
               <td className="border border-gray-300 p-2 text-neutral-800 text-center">
-                {record.api_key}
+                {record.apiKey}
               </td>
               <td className="border border-gray-300 p-2 text-neutral-800 text-center">
                 {record.hits}

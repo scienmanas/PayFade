@@ -1,0 +1,1 @@
+ALTER TABLE "website" RENAME COLUMN "website_url" TO "website_domain";

@@ -17,6 +17,10 @@ interface createRecordStateType {
     websiteName: string | null;
     websiteDomain: string | null;
   };
+  verificationHandler: {
+    code: string | null,
+    status: null | "verified" | "failed",
+  },
   formError: {
     websiteName: string | null;
     websiteDomain: string | null;
@@ -38,6 +42,12 @@ type Action =
       type: "SET_FORM_ERROR";
       field: keyof createRecordStateType["formError"];
       value: string | null;
+    }
+    |
+    {
+      type: "SET_VERIFICATION";
+      field : keyof createRecordStateType["verificationHandler"];
+      value: string | null
     }
   | { type: "RESET" };
 
@@ -66,6 +76,14 @@ export function CreateRecord() {
             [action.field]: action.value,
           },
         };
+        case "SET_VERIFICATION": 
+        return {
+          ...state,
+          verificationHandler :{
+            ...state.verificationHandler,
+            [action.field] : action.value,
+          }
+        }
       case "RESET":
         return initialState;
       default:
@@ -81,6 +99,10 @@ export function CreateRecord() {
     formData: {
       websiteName: null,
       websiteDomain: null,
+    },
+    verificationHandler: {
+      code: null,
+      status: null
     },
     formError: {
       websiteName: null,
@@ -134,7 +156,7 @@ function CreateRecordForm({
   state: createRecordStateType;
 }) {
   // Function to handle form submission
-  function handleFormSubmission(e: React.FormEvent<HTMLFormElement>) {
+  async function handleFormSubmission(e: React.FormEvent<HTMLFormElement>) {
     // Prevent default form submission behavior and initial states handling
     e.preventDefault();
 
@@ -167,8 +189,6 @@ function CreateRecordForm({
       websiteName: formData.get("websiteName") as string,
       websiteDomain: formData.get("websiteDomain") as string,
     };
-
-    console.log(formData);
 
     // Validate form data
     const validation = formSchema.safeParse(parsedData);
@@ -208,6 +228,8 @@ function CreateRecordForm({
       });
 
       if (response.status === 201) {
+        const responseData = await response.json()
+        console.log(responseData)
       }
     } catch (error) {
     } finally {

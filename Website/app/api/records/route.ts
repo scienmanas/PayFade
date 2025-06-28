@@ -154,10 +154,47 @@ export async function PATCH(req: NextRequest) {
       .where(eq(website.id, id));
 
     // Get the verification code from the DNS TXT record
-    const txtRecords = await dns.resolveTxt(record[0].websiteDomain);
+    const txtRecords = await dns.resolveTxt(record[0].websiteDomain); // It will come in array all the records and enclosed in string
 
-    console.log("TXT Records:", txtRecords);
-    // Yaha sae bacha ha
+    // Iterate through all TXT records to find the verification code
+    let verificationCodeFromDNSRecords: string | null = null;
+    for (const record of txtRecords) {
+      for (const parsedRecord of record) {
+        console.log(parsedRecord);
+        if (parsedRecord.startsWith("payfade-verification-code=")) {
+          verificationCodeFromDNSRecords = parsedRecord.replace(
+            "payfade-verification-code=",
+            ""
+          );
+          break;
+        }
+      }
+      if (verificationCodeFromDNSRecords) break;
+    }
+
+    // if no verification, return the message to the client
+    if (!verificationCodeFromDNSRecords)
+      return NextResponse.json(
+        {
+          error: "Please add the code to your website's DNS TXT record",
+        },
+        {
+          status: 400,
+        }
+      );
+
+    // Verify the code with the database
+    if (verificationCodeFromDNSRecords !== record[0].verificationCode)
+      return NextResponse.json(
+        { error: "Wrong code/format found" },
+        { status: 400 }
+      );
+
+    // If everything is success then return success
+    return NextResponse.json(
+      { message: "Verification Successful" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("DNS TXT record resolution failed:", error);
     return NextResponse.json(

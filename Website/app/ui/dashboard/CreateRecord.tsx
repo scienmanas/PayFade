@@ -2,12 +2,11 @@
 
 import { firaSansFont } from "@/app/lib/fonts";
 import { IoCreateOutline } from "react-icons/io5";
-import { useReducer, useRef, useEffect } from "react";
+import { useReducer, useRef } from "react";
 import { motion } from "framer-motion";
 import { useRecordsList } from "@/app/hooks/useRecordsList";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { z } from "zod";
-import { website } from "@/db/schema";
 
 interface createRecordStateType {
   isFormOpen: boolean;
@@ -312,9 +311,47 @@ function CreateRecordForm({
         }),
       });
 
+      const responseData = await response.json();
+      if (response.status === 200) {
+        // Update states and context
+        dispatch({
+          type: "SET_VERIFICATION",
+          field: "status",
+          value: "verified",
+        });
+        setRecords((prev) =>
+          (prev || []).map(
+            (rec) =>
+              rec.id === id
+                ? {
+                    ...rec, // keep any old fields you don’t want to change
+                    verified: true,
+                  }
+                : rec // otherwise leave it alone
+          )
+        );
+      } else {
+        dispatch({
+          type: "SET_ERROR",
+          field: "globalComponentError",
+          value: responseData.error ?? "Some Error Occurred",
+        });
+        dispatch({
+          type: "SET_VERIFICATION",
+          field: "status",
+          value: "failed",
+        });
+      }
+
       // display message accordingly received from the response
-      
-    } catch (error) {}
+    } catch (error) {
+      console.log("Error: ", error);
+      dispatch({
+        type: "SET_ERROR",
+        field: "globalComponentError",
+        value: "Some Error Occurred",
+      });
+    }
   }
 
   return (
@@ -421,16 +458,7 @@ function CreateRecordForm({
                 Domain
               </div>
             </label>
-            {/* Error message display */}
-            {state.globalComponentError && (
-              <div className="error-message">
-                {state.globalComponentError && (
-                  <p className="text-red-600 font-bold text-sm text-wrap">
-                    {state.globalComponentError}
-                  </p>
-                )}
-              </div>
-            )}
+
             {/* Submission button */}
             {state.submissionStatus !== "submitted" && (
               <button
@@ -455,19 +483,26 @@ function CreateRecordForm({
         {/* Verification details and button */}
         {state.verificationHandler.status !== null ? (
           <form
+            onClick={() =>
+              dispatch({
+                type: "SET_ERROR",
+                field: "globalComponentError",
+                value: null,
+              })
+            }
             onSubmit={handleDomainVerification}
             className="verification-items-and-button w-fit h-fit flex flex-col gap-3"
           >
             <div className="verification-instructions-and-code flex flex-col gap-2">
-              <p className="text-sm">
-                Add the below id to TXT record in your DNS settings.
-              </p>
+              <p className="text-sm"></p>
+              Add the below id to TXT record in your DNS settings.
               <div className="flex items-center space-x-2">
                 <input
+                  name="verificationCode"
                   type="text"
                   readOnly
                   value={state.verificationHandler.code as string}
-                  className="font-mono bg-gray-100 px-2 py-1 rounded"
+                  className="text-sm bg-gray-100 px-2 py-1 rounded"
                 />
                 <input
                   type="text"
@@ -475,7 +510,7 @@ function CreateRecordForm({
                   className="hidden"
                   readOnly
                   aria-hidden
-                  value={state.verificationHandler.code as string}
+                  value={state.verificationHandler.id as string}
                 ></input>
                 <button
                   type="button"
@@ -515,6 +550,16 @@ function CreateRecordForm({
             </button>
           </form>
         ) : null}
+        {/* Error message display */}
+        {state.globalComponentError && (
+          <div className="error-message">
+            {state.globalComponentError && (
+              <p className="text-red-600 font-bold text-sm text-wrap">
+                {state.globalComponentError}
+              </p>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );

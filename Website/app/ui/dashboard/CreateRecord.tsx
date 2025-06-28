@@ -124,7 +124,7 @@ export function CreateRecord() {
           dispatch({ type: "SET_FIELD", field: "isFormOpen", value: true });
         }}
         type="button"
-        className="w-fit h-fit bg-[#2e2a54] text-neutral-100 font-bold px-4 py-2 rounded-md hover:bg-[#3c376b] transition-colors duration-200 flex flex-row items-center gap-1 justify-center"
+        className="w-fit h-fit bg-black text-neutral-100 font-bold px-4 py-2 rounded-md transition-colors duration-200 flex flex-row items-center gap-1 justify-center"
       >
         <IoCreateOutline className="text-lg" />
         <span className="text-neutral-100">Create</span>
@@ -229,6 +229,9 @@ function CreateRecordForm({
             apiKey: recordsFromResponse.apiKey as string,
             createdAt: recordsFromResponse.createdAt as string,
             hits: recordsFromResponse.hits as number,
+            enforcementType: recordsFromResponse.enforcementType as string,
+            opacity: recordsFromResponse.opacity as number,
+            verificationCode: recordsFromResponse.verificationCode ?? null,
             verified: false,
             websiteDomain: parsedData.websiteDomain,
             websiteName: parsedData.websiteName,
@@ -330,6 +333,9 @@ function CreateRecordForm({
                 : rec // otherwise leave it alone
           )
         );
+        formRef.current?.reset(); // Reset the form
+        dispatch({ type: "RESET" }); // Reset all the things
+        dispatch({ type: "SET_FIELD", field: "isFormOpen", value: false }); // To close the form
       } else {
         dispatch({
           type: "SET_ERROR",
@@ -518,7 +524,7 @@ function CreateRecordForm({
                     const btn = e.currentTarget;
                     // Copy the text to clip board
                     navigator.clipboard.writeText(
-                      state.verificationHandler.code as string
+                      `"payfade-verification-code=${state.verificationHandler.code}"` as string
                     );
                     // Swap the label
                     const originalLabel = btn.textContent;
@@ -535,7 +541,6 @@ function CreateRecordForm({
                 </button>
               </div>
             </div>
-
             <button
               type="submit"
               className="verify-button w-fit h-fit py-1 px-3 font-bold bg-black text-white rounded"

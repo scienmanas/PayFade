@@ -9,10 +9,12 @@ import { Hero } from "@/app/ui/dashboard/Hero";
 import { CreateRecord } from "@/app/ui/dashboard/CreateRecord";
 import { Records } from "@/app/ui/dashboard/Records";
 import { RecordsContext } from "@/app/hooks/useRecordsList";
+import { RecordsType } from "@/app/lib/definitions";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [records, setRecords] = useState<RecordsType[] | null>(null);
 
   // States
   const [userData, setUserData] = useState<{
@@ -60,7 +62,7 @@ export default function DashboardPage() {
         <div className="page-contents relative w-full max-w-screen-xl h-fit flex flex-col gap-10 mt-20 p-4">
           <Hero name={userData?.name as string} />
           <RecordsContext.Provider
-            value={{ records: null, setRecords: () => [] }}
+            value={{ records, setRecords }}
           >
             <CreateRecord />
             <Records />

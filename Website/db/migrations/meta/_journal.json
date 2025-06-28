@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1749059858813,
-      "tag": "0000_yellow_sharon_ventura",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1750482958426,
-      "tag": "0001_known_morgan_stark",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1750483242897,
-      "tag": "0002_wise_microchip",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1750512844439,
-      "tag": "0003_normal_garia",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1750513220659,
-      "tag": "0004_whole_meggan",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1750562363469,
-      "tag": "0005_eager_killraven",
+      "when": 1751102876670,
+      "tag": "0000_sloppy_ink",
       "breakpoints": true
     }
   ]

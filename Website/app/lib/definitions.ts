@@ -10,6 +10,9 @@ export interface RecordsType {
   hits: number;
   createdAt: string;
   verified: boolean;
+  enforcementType: string;
+  opacity: number;
+  verificationCode: string | null;
 }
 
 export interface RecordsPostType {

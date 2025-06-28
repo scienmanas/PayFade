@@ -1,5 +1,5 @@
 {
-  "id": "fa662392-9c4d-474a-ab18-5f4acb15f53d",
+  "id": "ef6fdc2e-51a3-4388-ad55-b4822938ceac",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -27,12 +27,25 @@
           "primaryKey": false,
           "notNull": true
         },
+        "profile_pic": {
+          "name": "profile_pic",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "flag": {
+          "name": "flag",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'good'"
         }
       },
       "indexes": {},
@@ -43,8 +56,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.website,": {
-      "name": "website,",
+    "public.website": {
+      "name": "website",
       "schema": "",
       "columns": {
         "id": {
@@ -66,17 +79,32 @@
           "primaryKey": false,
           "notNull": true
         },
-        "website_url": {
-          "name": "website_url",
+        "website_domain": {
+          "name": "website_domain",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "api_key": {
           "name": "api_key",
-          "type": "varchar(255)",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "verification_code": {
+          "name": "verification_code",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "hits": {
           "name": "hits",
@@ -91,13 +119,27 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "enforcement_type": {
+          "name": "enforcement_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'opacity'"
+        },
+        "opacity": {
+          "name": "opacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 100
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "website,_user_id_user_id_fk": {
-          "name": "website,_user_id_user_id_fk",
-          "tableFrom": "website,",
+        "website_user_id_user_id_fk": {
+          "name": "website_user_id_user_id_fk",
+          "tableFrom": "website",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"

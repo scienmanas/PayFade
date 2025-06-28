@@ -39,4 +39,6 @@ export const website = pgTable("website", {
   verified: boolean("verified").default(false).notNull(),
   hits: integer("hits").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  enforcement_type: varchar("enforcement_type").default("opacity").notNull(),
+  opacity: integer("opacity").default(100).notNull(),
 });

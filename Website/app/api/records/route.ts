@@ -34,6 +34,10 @@ export async function GET(req: Request) {
       hits: record.hits,
       createdAt: record.createdAt,
       verified: record.verified,
+      enforcementType: record.enforcement_type,
+      opacity: record.opacity,
+      verificationCode:
+        record.verified === false ? record.verification_code : null,
     }));
 
     return NextResponse.json(
@@ -103,6 +107,8 @@ export async function POST(req: NextRequest) {
       apiKey: newRecord[0].api_key,
       hits: newRecord[0].hits,
       createdAt: newRecord[0].createdAt,
+      enforcementType: newRecord[0].enforcement_type,
+      opacity: newRecord[0].opacity,
     };
 
     // Return a success response with the new record
@@ -153,20 +159,28 @@ export async function PATCH(req: NextRequest) {
       .from(website)
       .where(eq(website.id, id));
 
-    // Get the verification code from the DNS TXT record
-    const txtRecords = await dns.resolveTxt(record[0].websiteDomain); // It will come in array all the records and enclosed in string
+    // Remove the subdomains from the domain
+    const hostname = record[0].websiteDomain;  
+    // capture either:
+    //   • “domain.co.uk” / “domain.co.in”  (i.e. co.<2‑letter>)
+    //   • OR “domain.XXX” for any other TLD of 2+ letters
+    const domain = hostname.replace(
+      /^(.+\.)?([^.]+\.(?:(?:co\.(?:uk|in))|[a-z]{2,}))$/,
+      "$2"
+    );
 
-    // Iterate through all TXT records to find the verification code
+    // Get the verification code from the DNS TXT record
+    const txtRecords = await dns.resolveTxt(domain); // It will come in array all the records and enclosed in string
+
+    // Iterate through all TXT records to find the verification code - no break statement because subdomain may have multiple TXT records
     let verificationCodeFromDNSRecords: string | null = null;
     for (const record of txtRecords) {
       for (const parsedRecord of record) {
-        console.log(parsedRecord);
         if (parsedRecord.startsWith("payfade-verification-code=")) {
           verificationCodeFromDNSRecords = parsedRecord.replace(
             "payfade-verification-code=",
             ""
           );
-          break;
         }
       }
       if (verificationCodeFromDNSRecords) break;
@@ -186,11 +200,15 @@ export async function PATCH(req: NextRequest) {
     // Verify the code with the database
     if (verificationCodeFromDNSRecords !== record[0].verificationCode)
       return NextResponse.json(
-        { error: "Wrong code/format found" },
+        {
+          error:
+            "Wrong code/format found, or DNS TXT record not published, please verify again after some-time.",
+        },
         { status: 400 }
       );
 
-    // If everything is success then return success
+    // If everything is success then return success and update the database
+    await db.update(website).set({ verified: true });
     return NextResponse.json(
       { message: "Verification Successful" },
       { status: 200 }

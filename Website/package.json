@@ -17,6 +17,7 @@
     "google-auth-library": "^9.15.1",
     "gray-matter": "^4.0.3",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.525.0",
     "markdown-to-jsx": "^7.7.6",
     "next": "^15.3.2",
     "postgres": "^3.4.7",

@@ -15,7 +15,7 @@ export const RecordsContext = createContext<RecordsContextType | undefined>(
 // Custom hook to use the RecordsListContext
 export function useRecordsList() {
   const context = useContext(RecordsContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useRecordsList must be used within a RecordsListProvider");
   }
   return context;

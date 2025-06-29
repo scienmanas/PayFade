@@ -9,7 +9,14 @@ export async function POST() {
 
     // If auth-token cookie is found, delete it
     if (authToken) {
-      (await cookieStore).delete("auth-token");
+      (await cookieStore).delete({
+        name: "auth-token",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? process.env.DOMAIN
+            : "localhost",
+        path: "/",
+      });
       return NextResponse.json(
         { message: "Logged out successfully" },
         { status: 200 }

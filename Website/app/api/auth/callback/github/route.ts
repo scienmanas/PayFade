@@ -11,7 +11,14 @@ export async function GET(req: NextRequest) {
   const cookieStore = cookies();
   const authToken = (await cookieStore).get("auth-token")?.value;
   if (authToken) {
-    (await cookieStore).delete("auth-token");
+    (await cookieStore).delete({
+      name: "auth-token",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.DOMAIN
+          : "localhost",
+      path: "/",
+    });
   }
 
   // Get url and then code from it

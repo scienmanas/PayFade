@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { JWTPayloadType, RecordsPostType } from "@/app/lib/definitions";
-import { resolveTxt } from "dns";
 import { db } from "@/db/index";
 import { website } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -100,6 +99,13 @@ export async function POST(req: NextRequest) {
       })
       .returning();
 
+    // Checking the length
+    if (newRecord.length === 0)
+      return NextResponse.json(
+        { message: "Failed to create record" },
+        { status: 500 }
+      );
+
     // Only return required data until verification is complete
     const responsePayload = {
       id: newRecord[0].id,
@@ -155,12 +161,24 @@ export async function PATCH(req: NextRequest) {
       .select({
         verificationCode: website.verification_code,
         websiteDomain: website.website_domain,
+        userIdFromRecord: website.user_id,
       })
       .from(website)
       .where(eq(website.id, id));
 
+    // Check for record
+    if (record.length === 0)
+      return NextResponse.json(
+        { message: "Record not found" },
+        { status: 404 }
+      );
+
+    // Check for user id
+    if (record[0].userIdFromRecord !== userId)
+      return NextResponse.json({ message: "Unauthorised" }, { status: 401 });
+
     // Remove the subdomains from the domain
-    const hostname = record[0].websiteDomain;  
+    const hostname = record[0].websiteDomain;
     // capture either:
     //   • “domain.co.uk” / “domain.co.in”  (i.e. co.<2‑letter>)
     //   • OR “domain.XXX” for any other TLD of 2+ letters
@@ -208,7 +226,7 @@ export async function PATCH(req: NextRequest) {
       );
 
     // If everything is success then return success and update the database
-    await db.update(website).set({ verified: true });
+    await db.update(website).set({ verified: true }).where(eq(website.id, id));
     return NextResponse.json(
       { message: "Verification Successful" },
       { status: 200 }

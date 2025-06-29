@@ -23,8 +23,6 @@ export function Navbar({
     bmc: "https://www.buymeacoffee.com/scienmanas",
   };
 
-  console.log(profilePic);
-
   return (
     <nav className="w-full fixed top-0 z-20 h-fit flex items-center justify-center bg-white border  border-neutral-200 backdrop-blur-xl">
       <div className="wrapper w-full max-w-screen-xl h-fit p-2 flex flex-row items-center justify-between gap-4 flex-wrap">

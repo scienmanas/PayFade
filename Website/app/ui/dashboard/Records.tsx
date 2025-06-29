@@ -9,6 +9,9 @@ import { Copy, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
+// Hardcoded forever, can update when needed
+const enforcementTypes = ["opacity"];
+
 export function Records() {
   const { records, setRecords } = useRecordsList();
   const [mounted, setMounted] = useState<boolean>(false);
@@ -23,6 +26,10 @@ export function Records() {
     verification: {
       status: boolean;
       code: string | null;
+    } | null;
+    editData: {
+      enforcementType: string;
+      opacity: number;
     } | null;
   }>(null);
 
@@ -109,6 +116,10 @@ function Dialog({
       status: boolean;
       code: string | null;
     } | null;
+    editData: {
+      enforcementType: string;
+      opacity: number;
+    } | null;
   } | null;
   setDialog: React.Dispatch<
     React.SetStateAction<{
@@ -118,6 +129,10 @@ function Dialog({
       verification: {
         status: boolean;
         code: string | null;
+      } | null;
+      editData: {
+        enforcementType: string;
+        opacity: number;
       } | null;
     } | null>
   >;
@@ -151,6 +166,7 @@ function Dialog({
     if (!id) {
       setPromiseStatus((prev) => ({ ...prev, delete: "error" }));
       setComponentError("Issue in deletion, refresh and try again.");
+      return;
     }
 
     try {
@@ -166,6 +182,7 @@ function Dialog({
         }),
       });
 
+      const data = await response.json();
       if (response.status === 200) {
         setPromiseStatus((prev) => ({ ...prev, delete: "success" }));
         // Remove the record from state
@@ -173,7 +190,12 @@ function Dialog({
           prevRecords ? prevRecords.filter((record) => record.id !== id) : null
         );
         setDialog(null); // To close the dialog
-      } else setPromiseStatus((prev) => ({ ...prev, delete: "error" }));
+      } else {
+        setPromiseStatus((prev) => ({ ...prev, delete: "error" }));
+        setComponentError(
+          data.message || "Some error occurred, refresh and try again."
+        );
+      }
     } catch (error) {
       console.log(error);
       setPromiseStatus((prev) => ({ ...prev, delete: "error" }));
@@ -197,6 +219,7 @@ function Dialog({
     if (!id) {
       setComponentError("Issue in verification, refresh and try again.");
       setPromiseStatus((prev) => ({ ...prev, verify: "error" }));
+      return;
     }
 
     // Send the request
@@ -231,7 +254,9 @@ function Dialog({
         setDialog(null);
       } else {
         // Update the states
-        setComponentError(responseData.error as string);
+        setComponentError(
+          responseData.message || "Some error occurred, refresh and try again."
+        );
         setPromiseStatus((prev) => ({ ...prev, verify: "error" }));
       }
     } catch (error) {
@@ -242,11 +267,82 @@ function Dialog({
 
   // Handle Edit
   async function handleEdit(event: React.FormEvent<HTMLFormElement>) {
-   // Initial loading statement management
-    event.preventDefault()
-    setPromiseStatus(prev => ({...prev,edit: "pending"}))
+    // Initial loading statement management
+    event.preventDefault();
+    setComponentError(null);
+    setPromiseStatus((prev) => ({ ...prev, edit: "pending" }));
 
-    
+    // Get the data
+    const formData = new FormData(event.target as HTMLFormElement);
+    const id: string = formData.get("id") as string;
+    const enforcementType: string = (
+      formData.get("enforcementType") as string
+    ).toLowerCase();
+    const opacity: number = parseInt(formData.get("opacity") as string);
+
+    // Check the data
+    if (!id || !enforcementType || !opacity) {
+      setComponentError("Please fill in all fields.");
+      setPromiseStatus((prev) => ({ ...prev, edit: "error" }));
+      return;
+    }
+
+    // Don't bypass - hehe
+    console.log(enforcementType);
+    if (!enforcementTypes.includes(enforcementType)) {
+      setComponentError("Invalid enforcement type.");
+      setPromiseStatus((prev) => ({ ...prev, edit: "error" }));
+      return;
+    }
+    // Check the opacity: 0-100
+    if (isNaN(opacity) || opacity < 0 || opacity > 100) {
+      setComponentError("Opacity must be a number between 0 and 100.");
+      setPromiseStatus((prev) => ({ ...prev, edit: "error" }));
+      return;
+    }
+
+    // Update the Database - call the APi
+    try {
+      const response = await fetch("/api/actions", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          id: id,
+          enforcementType: enforcementType,
+          opacity: opacity,
+        }),
+      });
+
+      // Get the data
+      const data = await response.json();
+      if (response.status === 200) {
+        const payloadReceived = data.payload;
+        setPromiseStatus((prev) => ({ ...prev, edit: "success" }));
+        setRecords((prev) =>
+          (prev || []).map((rec) =>
+            rec.id === id
+              ? {
+                  ...rec,
+                  enforcementType: payloadReceived.enforcementType,
+                  opacity: parseInt(payloadReceived.opacity as string),
+                }
+              : rec
+          )
+        );
+      } else {
+        setComponentError(
+          data.message ?? "Some Error occurred, please refresh and try again."
+        );
+        setPromiseStatus((prev) => ({ ...prev, edit: "error" }));
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      setComponentError("Sonme error occurred, refresh and try again.");
+      setPromiseStatus((prev) => ({ ...prev, edit: "error" }));
+    }
   }
 
   // Effect for outside click
@@ -453,6 +549,121 @@ function Dialog({
           </form>
         )}
         {/* Edit form */}
+        {dialog?.type === "edit" && (
+          <form
+            onClick={() => setComponentError(null)}
+            className="edit-form w-full h-fit flex flex-col gap-4"
+            onSubmit={handleEdit}
+          >
+            {/* Hidden ID field */}
+            <input
+              type="text"
+              name="id"
+              readOnly
+              value={dialog?.id || ""}
+              hidden
+              aria-hidden
+            />
+            {/* Opacity Input (0-100) */}
+            <div className="form-group opacity-group flex flex-col gap-2">
+              <label
+                htmlFor="opacity"
+                className="text-sm font-semibold text-gray-700"
+              >
+                Opacity (0-100)
+              </label>
+              <div className="relative opacity-div">
+                <input
+                  type="number"
+                  name="opacity"
+                  id="opacity"
+                  min="0"
+                  max="100"
+                  defaultValue={dialog.editData?.opacity || 0}
+                  step="1"
+                  required
+                  placeholder="Enter value 0-100"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  onInput={(e) => {
+                    const input = e.target as HTMLInputElement;
+                    const value = parseInt(input.value);
+                    if (value < 0) input.value = "0";
+                    if (value > 100) input.value = "100";
+                  }}
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-500">
+                  %
+                </div>
+              </div>
+            </div>
+            {/* Enforcement Type Selector */}
+            <div className="form-group flex flex-col gap-2">
+              <label
+                htmlFor="enforcement"
+                className="text-sm font-semibold text-gray-700"
+              >
+                Enforcement Type
+              </label>
+              <select
+                name="enforcementType"
+                id="enforcementType"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 text-sm bg-white"
+              >
+                {enforcementTypes.map((type, index) => (
+                  <option key={index} value={type.toLowerCase()}>
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Action Buttons */}
+            <div className="buttons w-full flex flex-row gap-2 justify-end mt-2">
+              <button
+                onClick={() => setDialog(null)}
+                type="button"
+                className={`px-4 py-2 text-sm text-gray-700 bg-gray-100 font-medium rounded-lg transition-colors ${
+                  promiseStatus.edit === "pending" ||
+                  promiseStatus.edit === "success"
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-gray-200"
+                }`}
+                disabled={
+                  promiseStatus.edit === "pending" ||
+                  promiseStatus.edit === "success"
+                }
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={`px-4 py-2 text-sm text-white bg-blue-600 font-medium rounded-lg transition-colors ${
+                  promiseStatus.edit === "pending" ||
+                  promiseStatus.edit === "success"
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-blue-700"
+                }`}
+                disabled={
+                  promiseStatus.edit === "pending" ||
+                  promiseStatus.edit === "success"
+                }
+              >
+                {promiseStatus.edit === "pending"
+                  ? "Saving..."
+                  : promiseStatus.edit === "success"
+                  ? "Saved"
+                  : "Save Changes"}
+              </button>
+            </div>
+            {/* Error Message */}
+            {componentError && (
+              <div className="error-message">
+                <p className="text-red-600 font-medium text-sm">
+                  {componentError}
+                </p>
+              </div>
+            )}
+          </form>
+        )}
       </motion.div>
     </div>
   );
@@ -477,36 +688,40 @@ function RecordsTable({
         status: boolean;
         code: string | null;
       } | null;
+      editData: {
+        enforcementType: string;
+        opacity: number;
+      } | null;
     } | null>
   >;
 }) {
   return (
     <div className="record-table relative w-full overflow-x-auto bg-white shadow-md h-fit">
-      <table className="min-w-full relative border-collapse whitespace-nowrap">
+      <table className="min-w-full relative border-collapse">
         <thead className="column-headings">
           <tr className="bg-gray-100 text-left text-sm sm:text-base">
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[120px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[120px] break-words">
               Website Name
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[100px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[100px] break-words">
               URL
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[100px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[100px] break-words">
               API Key
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[80px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[80px] break-words">
               Enforcement Type
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[80px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[80px] break-words">
               Opacity
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[80px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[80px] break-words">
               Hits
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[120px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[120px] break-words">
               Created On
             </th>
-            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[100px]">
+            <th className="border border-gray-300 p-2 text-neutral-800 text-center min-w-[100px] break-words">
               Action
             </th>
           </tr>
@@ -603,6 +818,10 @@ function RecordsTableDataRendered({
         status: boolean;
         code: string | null;
       } | null;
+      editData: {
+        enforcementType: string;
+        opacity: number;
+      } | null;
     } | null>
   >;
 }) {
@@ -669,6 +888,10 @@ function RecordsTableDataRendered({
                           type: "edit",
                           text: "Are you sure you want to edit this record?",
                           verification: null,
+                          editData: {
+                            enforcementType: record.enforcementType,
+                            opacity: record.opacity,
+                          },
                         });
                       } else {
                         setDialog({
@@ -679,6 +902,7 @@ function RecordsTableDataRendered({
                             code: record.verificationCode,
                             status: false,
                           },
+                          editData: null,
                         });
                       }
                     }}
@@ -697,6 +921,7 @@ function RecordsTableDataRendered({
                         type: "delete",
                         text: "Are you sure, you want to delete this record?",
                         verification: null,
+                        editData: null,
                       });
                     }}
                     type="button"

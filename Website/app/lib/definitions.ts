@@ -1,13 +1,21 @@
-export interface OAuthData {
-  provider: "google" | "github";
-  token: string;
+export interface JWTPayloadType {
+  id: string;
 }
 
-export interface WebsiteRecordData {
+export interface RecordsType {
   id: string;
-  website_name: string;
-  website_url: string;
-  api_key: string;
+  websiteName: string;
+  websiteDomain: string;
+  apiKey: string;
   hits: number;
   createdAt: string;
+  verified: boolean;
+  enforcementType: string;
+  opacity: number;
+  verificationCode: string | null;
+}
+
+export interface RecordsPostType {
+  websiteName: string;
+  websiteDomain: string;
 }

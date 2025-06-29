@@ -3,7 +3,7 @@ import { firaSansFont } from "@/app/lib/fonts";
 export function Hero({ name }: { name: string }) {
   return (
     <section
-      className={`hero w-fit h-fit ${firaSansFont.className} flex flex-col gap-2`}
+      className={`hero w-fit relative z-10 h-fit ${firaSansFont.className} flex flex-col gap-2`}
     >
       <p className="w-fit h-fit text-base sm:text-lg text-black">
         Hi{" "}

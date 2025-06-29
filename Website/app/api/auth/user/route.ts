@@ -23,7 +23,14 @@ export async function POST(req: NextRequest) {
     const jwtDecoded = jwt.verify(authToken, process.env.JWT_SECRET as string);
     if (!jwtDecoded) {
       // Clear the invalid session token cookie
-      (await cookieStore).delete("auth-token");
+      (await cookieStore).delete({
+        name: "auth-token",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? process.env.DOMAIN
+            : "localhost",
+        path: "/",
+      });
       return NextResponse.json(
         { error: "Invalid session token" },
         { status: 401 }
@@ -40,7 +47,14 @@ export async function POST(req: NextRequest) {
 
     if (userData.length === 0) {
       // Clear the invalid session token cookie
-      (await cookieStore).delete("auth-token");
+      (await cookieStore).delete({
+        name: "auth-token",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? process.env.DOMAIN
+            : "localhost",
+        path: "/",
+      });
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
@@ -56,7 +70,14 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error processing the request:", error);
     // Clear the invalid auth token cookie
-    (await cookieStore).delete("auth-token");
+    (await cookieStore).delete({
+      name: "auth-token",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.DOMAIN
+          : "localhost",
+      path: "/",
+    });
     return NextResponse.json({ error: "Invalid auth token" }, { status: 500 });
   }
 }

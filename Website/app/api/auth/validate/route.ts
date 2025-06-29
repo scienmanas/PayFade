@@ -18,7 +18,14 @@ export async function POST(req: NextRequest) {
   try {
     const jwtDecoded = jwt.verify(authToken, process.env.JWT_SECRET as string);
     if (!jwtDecoded) {
-      (await cookieStore).delete("auth-token");
+      (await cookieStore).delete({
+        name: "auth-token",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? process.env.DOMAIN
+            : "localhost",
+        path: "/",
+      });
       return NextResponse.json(
         { error: "Invalid session token" },
         { status: 401 }
@@ -29,7 +36,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Session is valid" }, { status: 200 });
   } catch (error) {
     // Clear the invalid session token cookie
-    (await cookieStore).delete("auth-token");
+    (await cookieStore).delete({
+      name: "auth-token",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.DOMAIN
+          : "localhost",
+      path: "/",
+    });
     return NextResponse.json({ error: "Invalid auth token" }, { status: 401 });
   }
 }

@@ -12,7 +12,14 @@ export async function GET(req: NextRequest) {
   const cookieStore = cookies();
   const authToken = (await cookieStore).get("auth-token")?.value;
   if (authToken) {
-    (await cookieStore).delete("auth-token");
+    (await cookieStore).delete({
+      name: "auth-token",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.DOMAIN
+          : "localhost",
+      path: "/",
+    });
   }
 
   // Get url and then code from it
@@ -80,11 +87,14 @@ export async function GET(req: NextRequest) {
       }
     } else {
       // User does not exist, insert a new user
-      userInfo = await db.insert(user).values({
-        name: name,
-        email: email,
-        profile_pic: profilePic, // null is accepted
-      }).returning();
+      userInfo = await db
+        .insert(user)
+        .values({
+          name: name,
+          email: email,
+          profile_pic: profilePic, // null is accepted
+        })
+        .returning();
     }
 
     // Build Payload
